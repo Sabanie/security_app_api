@@ -1,0 +1,133 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                    String         @id @default(uuid())
+  departement           String
+  name                  String
+  plant                 Plant
+  username              String         @unique
+  password              String
+  role                  Role
+  refresh_token         String
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  guests                Guest[]
+  surat_keluar_pengirim Surat_Keluar[] @relation("Pengirim")
+  surat_keluar_tujuan   Surat_Keluar[] @relation("Tujuan")
+  surat_masuk           Surat_Masuk[]  @relation("Pengirim")
+  tujuan_masuk          Surat_Masuk[]  @relation("TujuanMasuk")
+}
+
+model Guest {
+  id          String   @id @default(uuid())
+  name        String
+  company     String
+  phone       String
+  plateNumber String
+  purpose     String
+  identity    String
+  plant       Plant
+  itemName    String?
+  quantity    String?
+  description String?
+  isActive    Boolean  @default(false)
+  isAprove    Boolean  @default(false)
+  picId       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  pic         User?    @relation(fields: [picId], references: [id])
+}
+
+model Surat_Masuk {
+  id                     String   @id @default(uuid())
+  perusahaanPengirim     String
+  namaPengirimInternalId String?
+  namaPengirimEksternal  String?
+  tujuanId               String?
+  satpam                 String
+  kurir                  String?
+  plant                  Plant
+  isAccepted             Boolean  @default(false)
+  keterangan             String?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  namaPengirimInternal   User?    @relation("Pengirim", fields: [namaPengirimInternalId], references: [id])
+  tujuan                 User?    @relation("TujuanMasuk", fields: [tujuanId], references: [id])
+}
+
+model Surat_Keluar {
+  id                  String   @id @default(uuid())
+  namaPengirimId      String?
+  tujuanInternalId    String?
+  tujuanEksternal     String?
+  perusahaanEksternal String?
+  satpam              String
+  kurir               String?
+  plant               Plant
+  isDelivered         Boolean  @default(false)
+  keterangan          String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  namaPengirim   User? @relation("Pengirim", fields: [namaPengirimId], references: [id])
+  tujuanInternal User? @relation("Tujuan", fields: [tujuanInternalId], references: [id])
+}
+
+model Employee {
+  id        String   @id @default(uuid())
+  nama      String
+  motor1    String?
+  motor2    String?
+  mobil1    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  absensi Absensi[]
+}
+
+model Absensi {
+  id         String   @id @default(uuid())
+  nopol      String?
+  plant      Plant
+  // Relasi ke Employee
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  kendaraan  Kendaraan @default(NONE)
+  keterangan String?
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  USER
+  SECURITYDS8
+  SECURITYDELTAMAS
+}
+
+enum Plant {
+  DS8
+  DELTAMAS
+}
+
+enum Kendaraan {
+  MOTOR
+  MOBIL
+  NONE // untuk string kosong
+}

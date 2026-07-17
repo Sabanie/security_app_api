@@ -1,5 +1,5 @@
-import type { Plant } from "./enums.js";
-import type { IUser } from "./user.js";
+import type { Plant } from "./enums";
+import type { IUser } from "./user";
 
 export interface ISuratKeluar {
   id: string;

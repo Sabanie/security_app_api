@@ -6,8 +6,8 @@ import {
   updateSuratKeluar,
   getMailById,
   updateMailItems,
-} from "../../controllers/suratKeluar.js";
-import { verifyToken } from "../../midlleware/verifyToken.js";
+} from "../../controllers/suratKeluar";
+import { verifyToken } from "../../midlleware/verifyToken";
 
 const router = Router();
 

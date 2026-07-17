@@ -1,7 +1,7 @@
-import type { Plant, Role } from "./enums.js";
-import type { IGuest } from "./guest.js";
-import type { ISuratMasuk } from "./suratMasuk.js";
-import type { ISuratKeluar } from "./suratKeluar.js";
+import type { Plant, Role } from "./enums";
+import type { IGuest } from "./guest";
+import type { ISuratMasuk } from "./suratMasuk";
+import type { ISuratKeluar } from "./suratKeluar";
 
 export interface IUser {
   id: string;

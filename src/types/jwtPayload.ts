@@ -1,4 +1,4 @@
-import type { Plant, Role } from "./enums.js";
+import type { Plant, Role } from "./enums";
 
 export interface MyJwtPayload {
   id: string;

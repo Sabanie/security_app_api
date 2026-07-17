@@ -1,4 +1,4 @@
-import type { IAbsensi } from "./absensi.js";
+import type { IAbsensi } from "./absensi";
 
 export interface IEmployee {
   id: string;

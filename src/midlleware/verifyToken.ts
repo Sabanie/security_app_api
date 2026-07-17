@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt, { type JwtPayload } from "jsonwebtoken";
-import type { Role, Plant } from "../types/enums.js";
+import type { Role, Plant } from "../types/enums";
 
 // custom payload jwt
 interface MyJwtPayload extends JwtPayload {

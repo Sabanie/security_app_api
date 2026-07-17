@@ -1,4 +1,4 @@
-import { prisma } from "../prisma.js";
+import { prisma } from "../prisma";
 import type { Request, Response } from "express";
 
 // GET all users

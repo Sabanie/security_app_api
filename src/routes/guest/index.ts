@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { verifyToken } from "../../midlleware/verifyToken.js";
+import { verifyToken } from "../../midlleware/verifyToken";
 import {
   createGuest,
   getGuests,
@@ -9,7 +9,7 @@ import {
   inActiveGuestById,
   updateGuestItems,
   getGuestById,
-} from "../../controllers/guest.js";
+} from "../../controllers/guest";
 
 const router = Router();
 

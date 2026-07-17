@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { getUsers, getUsersDs, getUsersDm } from "../../controllers/user.js";
-import { verifyToken } from "../../midlleware/verifyToken.js";
+import { getUsers, getUsersDs, getUsersDm } from "../../controllers/user";
 
 const router = Router();
 

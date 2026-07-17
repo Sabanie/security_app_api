@@ -1,5 +1,5 @@
-import type { MyJwtPayload } from "../types/jwtPayload.js";
-import { prisma } from "../prisma.js";
+import type { MyJwtPayload } from "../types/jwtPayload";
+import { prisma } from "../prisma";
 import bcrypt from "bcrypt";
 import type { Request, Response } from "express";
 import jwt from "jsonwebtoken";

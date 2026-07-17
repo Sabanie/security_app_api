@@ -5,8 +5,8 @@ import {
   getAllSuratMasuk,
   getSuratMasukByPicId,
   updateSuratMasuk,
-} from "../../controllers/suratMasuk.js";
-import { verifyToken } from "../../midlleware/verifyToken.js";
+} from "../../controllers/suratMasuk";
+import { verifyToken } from "../../midlleware/verifyToken";
 
 const router = Router();
 

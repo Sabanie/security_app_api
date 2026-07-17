@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { prisma } from "../prisma.js";
-import type { MyJwtPayload } from "../types/jwtPayload.js";
+import { prisma } from "../prisma";
+import type { MyJwtPayload } from "../types/jwtPayload";
 
 interface AuthRequest extends Request {
   user?: MyJwtPayload;

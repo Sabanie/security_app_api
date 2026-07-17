@@ -5,8 +5,8 @@ import {
   refreshToken,
   meController,
   register,
-} from "../../controllers/auth.js";
-import { verifyToken } from "../../midlleware/verifyToken.js";
+} from "../../controllers/auth";
+import { verifyToken } from "../../midlleware/verifyToken";
 
 const router = Router();
 

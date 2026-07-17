@@ -1,5 +1,5 @@
-import { Plant, Kendaraan } from "./enums.js";
-import type { IEmployee } from "./employee.js";
+import { Plant, Kendaraan } from "./enums";
+import type { IEmployee } from "./employee";
 
 export interface IAbsensi {
   id: string;

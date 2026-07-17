@@ -44,10 +44,7 @@ export async function getUsersDs(req: Request, res: Response) {
       },
     });
 
-    return res.status(200).json({
-      success: true,
-      data: users,
-    });
+    return res.status(200).json(users);
   } catch (error) {
     console.error("Error fetching DS8 users:", error);
     return res.status(500).json({

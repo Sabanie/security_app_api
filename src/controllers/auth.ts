@@ -122,7 +122,7 @@ export const login = async (req: Request, res: Response) => {
     // set cookie
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
       secure: process.env.NODE_ENV === "production",
       maxAge: 24 * 60 * 60 * 1000,
     });
@@ -155,7 +155,7 @@ export const logout = async (req: Request, res: Response) => {
       res.clearCookie("refreshToken", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: "none",
       });
       return res.status(200).json({ message: "Logout berhasil!" });
     }
@@ -170,7 +170,7 @@ export const logout = async (req: Request, res: Response) => {
     res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "none",
     });
 
     return res.status(200).json({ message: "Logout berhasil!" });

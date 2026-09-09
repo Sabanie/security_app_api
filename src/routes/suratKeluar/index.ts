@@ -6,6 +6,7 @@ import {
   updateSuratKeluar,
   getMailById,
   updateMailItems,
+  suratKeluarMonthlyByWeek,
 } from "../../controllers/suratKeluar";
 import { verifyToken } from "../../midlleware/verifyToken";
 
@@ -17,5 +18,6 @@ router.get("/mine", verifyToken, getSuratKeluarByPicId);
 router.get("/id", verifyToken, getMailById);
 router.put("/:id", verifyToken, updateMailItems);
 router.put("/:id/isdelivered", verifyToken, updateSuratKeluar);
+router.get("/stats/monthly-weeks", verifyToken, suratKeluarMonthlyByWeek);
 
 export default router;

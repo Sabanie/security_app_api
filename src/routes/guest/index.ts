@@ -9,6 +9,7 @@ import {
   inActiveGuestById,
   updateGuestItems,
   getGuestById,
+  guestMonthlyByWeek,
 } from "../../controllers/guest";
 
 const router = Router();
@@ -34,4 +35,6 @@ router.put("/:id/approve", verifyToken, approveGuestById);
 // approval tamu by pic Id
 router.put("/:id/inactive", verifyToken, inActiveGuestById);
 
+// 📊 route baru: jumlah guest per minggu dalam bulan
+router.get("/stats/monthly-weeks", verifyToken, guestMonthlyByWeek);
 export default router;

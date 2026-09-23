@@ -303,3 +303,58 @@ export const suratKeluarMonthlyByWeek = async (req: Request, res: Response) => {
       .json({ success: false, error: "Failed to fetch surat keluar by week" });
   }
 };
+
+export const suratKeluarToday = async (req: Request, res: Response) => {
+  try {
+    const { plant } = req.query;
+
+    // ambil tanggal hari ini
+    const now = new Date();
+    const startOfDay = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      0,
+      0,
+      0,
+      0
+    );
+    const endOfDay = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      23,
+      59,
+      59,
+      999
+    );
+
+    // query surat keluar hanya untuk hari ini, filter plant jika ada
+    const suratKeluar = await prisma.surat_Keluar.findMany({
+      where: {
+        createdAt: {
+          gte: startOfDay,
+          lte: endOfDay,
+        },
+        ...(plant ? { plant: plant as Plant } : {}), // filter plant opsional
+      },
+    });
+
+    res.json({
+      success: true,
+      data: {
+        date: now.toISOString().split("T")[0], // format YYYY-MM-DD
+        count: suratKeluar.length,
+      },
+      meta: {
+        plant: plant || "ALL",
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching today's surat keluar:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch today's surat keluar",
+    });
+  }
+};

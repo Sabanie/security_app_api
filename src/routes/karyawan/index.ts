@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyToken } from "../../midlleware/verifyToken";
+import { verifyAccessToken } from "../../midlleware/verifyToken";
 import {
   createKaryawan,
   deleteKaryawan,
@@ -12,10 +12,10 @@ const router = Router();
 // create
 router.post("/", createKaryawan);
 // get all
-router.get("/", verifyToken, getAllKaryawan);
+router.get("/", verifyAccessToken, getAllKaryawan);
 // update
-router.put("/:id", verifyToken, updateKaryawan);
+router.put("/:id", verifyAccessToken, updateKaryawan);
 // delete
-router.delete("/:id", verifyToken, deleteKaryawan);
+router.delete("/:id", verifyAccessToken, deleteKaryawan);
 
 export default router;

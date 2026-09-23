@@ -15,28 +15,49 @@ export interface AuthRequest extends Request {
   user?: MyJwtPayload;
 }
 
-export const verifyToken = (
+export const verifyAccessToken = (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "Access token tidak ditemukan!" });
+    }
+
+    const secret = process.env.ACCESS_TOKEN_SECRET as string;
+    const decoded = jwt.verify(token, secret) as MyJwtPayload;
+
+    req.user = decoded;
+    next();
+  } catch (error) {
+    console.error("Access token verification error:", error);
+    return res.status(403).json({ message: "Access token tidak valid!" });
+  }
+};
+
+export const verifyRefreshToken = (
   req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const token = req.cookies.refreshToken;
-
     if (!token) {
-      return res.status(401).json({ message: "Token tidak ditemukan!" });
+      return res
+        .status(401)
+        .json({ message: "Refresh token tidak ditemukan!" });
     }
 
     const secret = process.env.REFRESH_TOKEN_SECRET as string;
-    // type decode agar sesuai payload custom
     const decoded = jwt.verify(token, secret) as MyJwtPayload;
 
-    // Simpan payload user di request agar bisa dipakai di controller
     req.user = decoded;
-
     next();
   } catch (error) {
-    console.error("Token verification error:", error);
-    return res.status(403).json({ message: "Token tidak valid!" });
+    console.error("Refresh token verification error:", error);
+    return res.status(403).json({ message: "Refresh token tidak valid!" });
   }
 };

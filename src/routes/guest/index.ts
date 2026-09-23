@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { verifyToken } from "../../midlleware/verifyToken";
+import { verifyAccessToken } from "../../midlleware/verifyToken";
 import {
   createGuest,
   getGuests,
@@ -10,6 +10,7 @@ import {
   updateGuestItems,
   getGuestById,
   guestMonthlyByWeek,
+  guestToday,
 } from "../../controllers/guest";
 
 const router = Router();
@@ -18,23 +19,26 @@ const router = Router();
 router.post("/", createGuest);
 
 // READ ALL
-router.get("/", verifyToken, getGuests);
+router.get("/", verifyAccessToken, getGuests);
 
 // READ by pic Id
-router.get("/mine", verifyToken, getGuestByPicId);
+router.get("/mine", verifyAccessToken, getGuestByPicId);
 
 // ambil data tamu berdasarkan id tamu
-router.get("/:id", verifyToken, getGuestById);
+router.get("/:id", verifyAccessToken, getGuestById);
 
 // ambil data tamu by id lanjut update itemname,quantity dan descript
-router.put("/:id", verifyToken, updateGuestItems);
+router.put("/:id", verifyAccessToken, updateGuestItems);
 
 // approval tamu by pic Id
-router.put("/:id/approve", verifyToken, approveGuestById);
+router.put("/:id/approve", verifyAccessToken, approveGuestById);
 
 // approval tamu by pic Id
-router.put("/:id/inactive", verifyToken, inActiveGuestById);
+router.put("/:id/inactive", verifyAccessToken, inActiveGuestById);
 
 // 📊 route baru: jumlah guest per minggu dalam bulan
-router.get("/stats/monthly-weeks", verifyToken, guestMonthlyByWeek);
+router.get("/stats/monthly-weeks", verifyAccessToken, guestMonthlyByWeek);
+
+// route jumlah tamu harian
+router.get("/stats/today", verifyAccessToken, guestToday);
 export default router;

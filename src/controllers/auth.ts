@@ -3,6 +3,7 @@ import { prisma } from "../prisma";
 import bcrypt from "bcrypt";
 import type { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import "dotenv/config";
 
 // custom payload jwt
 
@@ -122,9 +123,9 @@ export const login = async (req: Request, res: Response) => {
     // set cookie
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      sameSite: "none",
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production", // true di production, false di lokal
+      maxAge: 24 * 60 * 60 * 1000, // 1 hari
     });
     return res.status(200).json({
       message: "Login berhasil!",

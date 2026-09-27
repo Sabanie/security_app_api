@@ -23,6 +23,7 @@ export const verifyAccessToken = (
   try {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
+
     if (!token) {
       return res.status(401).json({ message: "Access token tidak ditemukan!" });
     }
@@ -33,7 +34,11 @@ export const verifyAccessToken = (
     req.user = decoded;
     next();
   } catch (error) {
-    console.error("Access token verification error:", error);
+    if (error instanceof jwt.TokenExpiredError) {
+      return res
+        .status(401)
+        .json({ message: "Access token sudah kadaluarsa!" });
+    }
     return res.status(403).json({ message: "Access token tidak valid!" });
   }
 };
@@ -57,7 +62,12 @@ export const verifyRefreshToken = (
     req.user = decoded;
     next();
   } catch (error) {
-    console.error("Refresh token verification error:", error);
+    if (error instanceof jwt.TokenExpiredError) {
+      return res
+        .status(401)
+        .json({ message: "Refresh token sudah kadaluarsa!" });
+    }
+
     return res.status(403).json({ message: "Refresh token tidak valid!" });
   }
 };

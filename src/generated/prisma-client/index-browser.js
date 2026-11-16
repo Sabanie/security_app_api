@@ -200,6 +200,8 @@ exports.Prisma.AbsensiScalarFieldEnum = {
   kendaraan: 'kendaraan',
   keterangan: 'keterangan',
   isActive: 'isActive',
+  checkInAt: 'checkInAt',
+  checkOutAt: 'checkOutAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

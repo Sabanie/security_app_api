@@ -7458,6 +7458,8 @@ export namespace Prisma {
     kendaraan: $Enums.Kendaraan | null
     keterangan: string | null
     isActive: boolean | null
+    checkInAt: Date | null
+    checkOutAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7470,6 +7472,8 @@ export namespace Prisma {
     kendaraan: $Enums.Kendaraan | null
     keterangan: string | null
     isActive: boolean | null
+    checkInAt: Date | null
+    checkOutAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7482,6 +7486,8 @@ export namespace Prisma {
     kendaraan: number
     keterangan: number
     isActive: number
+    checkInAt: number
+    checkOutAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -7496,6 +7502,8 @@ export namespace Prisma {
     kendaraan?: true
     keterangan?: true
     isActive?: true
+    checkInAt?: true
+    checkOutAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7508,6 +7516,8 @@ export namespace Prisma {
     kendaraan?: true
     keterangan?: true
     isActive?: true
+    checkInAt?: true
+    checkOutAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7520,6 +7530,8 @@ export namespace Prisma {
     kendaraan?: true
     keterangan?: true
     isActive?: true
+    checkInAt?: true
+    checkOutAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -7605,6 +7617,8 @@ export namespace Prisma {
     kendaraan: $Enums.Kendaraan
     keterangan: string | null
     isActive: boolean
+    checkInAt: Date
+    checkOutAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: AbsensiCountAggregateOutputType | null
@@ -7634,6 +7648,8 @@ export namespace Prisma {
     kendaraan?: boolean
     keterangan?: boolean
     isActive?: boolean
+    checkInAt?: boolean
+    checkOutAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     employee?: boolean | EmployeeDefaultArgs<ExtArgs>
@@ -7647,6 +7663,8 @@ export namespace Prisma {
     kendaraan?: boolean
     keterangan?: boolean
     isActive?: boolean
+    checkInAt?: boolean
+    checkOutAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     employee?: boolean | EmployeeDefaultArgs<ExtArgs>
@@ -7660,6 +7678,8 @@ export namespace Prisma {
     kendaraan?: boolean
     keterangan?: boolean
     isActive?: boolean
+    checkInAt?: boolean
+    checkOutAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     employee?: boolean | EmployeeDefaultArgs<ExtArgs>
@@ -7673,11 +7693,13 @@ export namespace Prisma {
     kendaraan?: boolean
     keterangan?: boolean
     isActive?: boolean
+    checkInAt?: boolean
+    checkOutAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AbsensiOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nopol" | "plant" | "employeeId" | "kendaraan" | "keterangan" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["absensi"]>
+  export type AbsensiOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nopol" | "plant" | "employeeId" | "kendaraan" | "keterangan" | "isActive" | "checkInAt" | "checkOutAt" | "createdAt" | "updatedAt", ExtArgs["result"]["absensi"]>
   export type AbsensiInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     employee?: boolean | EmployeeDefaultArgs<ExtArgs>
   }
@@ -7701,6 +7723,8 @@ export namespace Prisma {
       kendaraan: $Enums.Kendaraan
       keterangan: string | null
       isActive: boolean
+      checkInAt: Date
+      checkOutAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["absensi"]>
@@ -8134,6 +8158,8 @@ export namespace Prisma {
     readonly kendaraan: FieldRef<"Absensi", 'Kendaraan'>
     readonly keterangan: FieldRef<"Absensi", 'String'>
     readonly isActive: FieldRef<"Absensi", 'Boolean'>
+    readonly checkInAt: FieldRef<"Absensi", 'DateTime'>
+    readonly checkOutAt: FieldRef<"Absensi", 'DateTime'>
     readonly createdAt: FieldRef<"Absensi", 'DateTime'>
     readonly updatedAt: FieldRef<"Absensi", 'DateTime'>
   }
@@ -8664,6 +8690,8 @@ export namespace Prisma {
     kendaraan: 'kendaraan',
     keterangan: 'keterangan',
     isActive: 'isActive',
+    checkInAt: 'checkInAt',
+    checkOutAt: 'checkOutAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -9258,6 +9286,8 @@ export namespace Prisma {
     kendaraan?: EnumKendaraanFilter<"Absensi"> | $Enums.Kendaraan
     keterangan?: StringNullableFilter<"Absensi"> | string | null
     isActive?: BoolFilter<"Absensi"> | boolean
+    checkInAt?: DateTimeFilter<"Absensi"> | Date | string
+    checkOutAt?: DateTimeNullableFilter<"Absensi"> | Date | string | null
     createdAt?: DateTimeFilter<"Absensi"> | Date | string
     updatedAt?: DateTimeFilter<"Absensi"> | Date | string
     employee?: XOR<EmployeeScalarRelationFilter, EmployeeWhereInput>
@@ -9271,6 +9301,8 @@ export namespace Prisma {
     kendaraan?: SortOrder
     keterangan?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    checkInAt?: SortOrder
+    checkOutAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     employee?: EmployeeOrderByWithRelationInput
@@ -9287,6 +9319,8 @@ export namespace Prisma {
     kendaraan?: EnumKendaraanFilter<"Absensi"> | $Enums.Kendaraan
     keterangan?: StringNullableFilter<"Absensi"> | string | null
     isActive?: BoolFilter<"Absensi"> | boolean
+    checkInAt?: DateTimeFilter<"Absensi"> | Date | string
+    checkOutAt?: DateTimeNullableFilter<"Absensi"> | Date | string | null
     createdAt?: DateTimeFilter<"Absensi"> | Date | string
     updatedAt?: DateTimeFilter<"Absensi"> | Date | string
     employee?: XOR<EmployeeScalarRelationFilter, EmployeeWhereInput>
@@ -9300,6 +9334,8 @@ export namespace Prisma {
     kendaraan?: SortOrder
     keterangan?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    checkInAt?: SortOrder
+    checkOutAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: AbsensiCountOrderByAggregateInput
@@ -9318,6 +9354,8 @@ export namespace Prisma {
     kendaraan?: EnumKendaraanWithAggregatesFilter<"Absensi"> | $Enums.Kendaraan
     keterangan?: StringNullableWithAggregatesFilter<"Absensi"> | string | null
     isActive?: BoolWithAggregatesFilter<"Absensi"> | boolean
+    checkInAt?: DateTimeWithAggregatesFilter<"Absensi"> | Date | string
+    checkOutAt?: DateTimeNullableWithAggregatesFilter<"Absensi"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Absensi"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Absensi"> | Date | string
   }
@@ -9852,6 +9890,8 @@ export namespace Prisma {
     kendaraan?: $Enums.Kendaraan
     keterangan?: string | null
     isActive?: boolean
+    checkInAt?: Date | string
+    checkOutAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     employee: EmployeeCreateNestedOneWithoutAbsensiInput
@@ -9865,6 +9905,8 @@ export namespace Prisma {
     kendaraan?: $Enums.Kendaraan
     keterangan?: string | null
     isActive?: boolean
+    checkInAt?: Date | string
+    checkOutAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -9876,6 +9918,8 @@ export namespace Prisma {
     kendaraan?: EnumKendaraanFieldUpdateOperationsInput | $Enums.Kendaraan
     keterangan?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    checkInAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employee?: EmployeeUpdateOneRequiredWithoutAbsensiNestedInput
@@ -9889,6 +9933,8 @@ export namespace Prisma {
     kendaraan?: EnumKendaraanFieldUpdateOperationsInput | $Enums.Kendaraan
     keterangan?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    checkInAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9901,6 +9947,8 @@ export namespace Prisma {
     kendaraan?: $Enums.Kendaraan
     keterangan?: string | null
     isActive?: boolean
+    checkInAt?: Date | string
+    checkOutAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -9912,6 +9960,8 @@ export namespace Prisma {
     kendaraan?: EnumKendaraanFieldUpdateOperationsInput | $Enums.Kendaraan
     keterangan?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    checkInAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9924,6 +9974,8 @@ export namespace Prisma {
     kendaraan?: EnumKendaraanFieldUpdateOperationsInput | $Enums.Kendaraan
     keterangan?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    checkInAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10339,6 +10391,17 @@ export namespace Prisma {
     not?: NestedEnumKendaraanFilter<$PrismaModel> | $Enums.Kendaraan
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type EmployeeScalarRelationFilter = {
     is?: EmployeeWhereInput
     isNot?: EmployeeWhereInput
@@ -10352,6 +10415,8 @@ export namespace Prisma {
     kendaraan?: SortOrder
     keterangan?: SortOrder
     isActive?: SortOrder
+    checkInAt?: SortOrder
+    checkOutAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10364,6 +10429,8 @@ export namespace Prisma {
     kendaraan?: SortOrder
     keterangan?: SortOrder
     isActive?: SortOrder
+    checkInAt?: SortOrder
+    checkOutAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10376,6 +10443,8 @@ export namespace Prisma {
     kendaraan?: SortOrder
     keterangan?: SortOrder
     isActive?: SortOrder
+    checkInAt?: SortOrder
+    checkOutAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10388,6 +10457,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumKendaraanFilter<$PrismaModel>
     _max?: NestedEnumKendaraanFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type GuestCreateNestedManyWithoutPicInput = {
@@ -10756,6 +10839,10 @@ export namespace Prisma {
     set?: $Enums.Kendaraan
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type EmployeeUpdateOneRequiredWithoutAbsensiNestedInput = {
     create?: XOR<EmployeeCreateWithoutAbsensiInput, EmployeeUncheckedCreateWithoutAbsensiInput>
     connectOrCreate?: EmployeeCreateOrConnectWithoutAbsensiInput
@@ -10927,6 +11014,17 @@ export namespace Prisma {
     not?: NestedEnumKendaraanFilter<$PrismaModel> | $Enums.Kendaraan
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedEnumKendaraanWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.Kendaraan | EnumKendaraanFieldRefInput<$PrismaModel>
     in?: $Enums.Kendaraan[] | ListEnumKendaraanFieldRefInput<$PrismaModel>
@@ -10935,6 +11033,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumKendaraanFilter<$PrismaModel>
     _max?: NestedEnumKendaraanFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type GuestCreateWithoutPicInput = {
@@ -11700,6 +11812,8 @@ export namespace Prisma {
     kendaraan?: $Enums.Kendaraan
     keterangan?: string | null
     isActive?: boolean
+    checkInAt?: Date | string
+    checkOutAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11711,6 +11825,8 @@ export namespace Prisma {
     kendaraan?: $Enums.Kendaraan
     keterangan?: string | null
     isActive?: boolean
+    checkInAt?: Date | string
+    checkOutAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11752,6 +11868,8 @@ export namespace Prisma {
     kendaraan?: EnumKendaraanFilter<"Absensi"> | $Enums.Kendaraan
     keterangan?: StringNullableFilter<"Absensi"> | string | null
     isActive?: BoolFilter<"Absensi"> | boolean
+    checkInAt?: DateTimeFilter<"Absensi"> | Date | string
+    checkOutAt?: DateTimeNullableFilter<"Absensi"> | Date | string | null
     createdAt?: DateTimeFilter<"Absensi"> | Date | string
     updatedAt?: DateTimeFilter<"Absensi"> | Date | string
   }
@@ -12115,6 +12233,8 @@ export namespace Prisma {
     kendaraan?: $Enums.Kendaraan
     keterangan?: string | null
     isActive?: boolean
+    checkInAt?: Date | string
+    checkOutAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -12126,6 +12246,8 @@ export namespace Prisma {
     kendaraan?: EnumKendaraanFieldUpdateOperationsInput | $Enums.Kendaraan
     keterangan?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    checkInAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12137,6 +12259,8 @@ export namespace Prisma {
     kendaraan?: EnumKendaraanFieldUpdateOperationsInput | $Enums.Kendaraan
     keterangan?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    checkInAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12148,6 +12272,8 @@ export namespace Prisma {
     kendaraan?: EnumKendaraanFieldUpdateOperationsInput | $Enums.Kendaraan
     keterangan?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    checkInAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

@@ -10,7 +10,7 @@ import {
 const router = Router();
 
 // create
-router.post("/", createKaryawan);
+router.post("/", verifyAccessToken, createKaryawan);
 // get all
 router.get("/", verifyAccessToken, getAllKaryawan);
 // update

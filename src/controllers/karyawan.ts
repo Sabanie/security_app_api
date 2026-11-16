@@ -8,13 +8,26 @@ export const createKaryawan = async (req: Request, res: Response) => {
     const { nama, motor1, motor2, mobil1 } = req.body;
 
     // validasi
-    if (!nama) {
+    if (!nama?.trim()) {
       return res.status(400).json({
         success: false,
         error: "field nama harus di isi",
       });
     }
 
+    // cek apakah karyawan sudah terdaftar
+    const existingKaryawan = await prisma.employee.findFirst({
+      where: {
+        nama: nama.trim(),
+      },
+    });
+
+    if (existingKaryawan) {
+      return res.status(409).json({
+        success: false,
+        error: "Karyawan sudah terdaftar",
+      });
+    }
     // simpan data karywan
     const newKaryawan = await prisma.employee.create({
       data: {
@@ -32,7 +45,7 @@ export const createKaryawan = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("error saat menambahkan karyawan:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: "terjadi kesalahan saat menambahkan karyawan",
     });

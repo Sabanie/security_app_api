@@ -112,8 +112,11 @@ model Absensi {
 
   isActive  Boolean  @default(true)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+   checkInAt  DateTime @default(now())
+  checkOutAt DateTime?
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 enum Role {

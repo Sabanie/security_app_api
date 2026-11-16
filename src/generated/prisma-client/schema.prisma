@@ -110,6 +110,9 @@ model Absensi {
 
   isActive Boolean @default(true)
 
+  checkInAt  DateTime  @default(now())
+  checkOutAt DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

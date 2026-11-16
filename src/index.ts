@@ -4,6 +4,7 @@ import usersRouter from "./routes/user/index";
 import employeRouter from "./routes/karyawan/index";
 import suratMasukRouter from "./routes/suratMasuk/index";
 import suratKeluarRouter from "./routes/suratKeluar/index";
+import absensiRouter from "./routes/absensi/index";
 import guestRouter from "./routes/guest/index";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -40,5 +41,7 @@ app.use("/api/employes", employeRouter);
 app.use("/api/surat-masuk", suratMasukRouter);
 // router surat keluar
 app.use("/api/surat-keluar", suratKeluarRouter);
+// router surat keluar
+app.use("/api/absensi", absensiRouter);
 
 export default app;

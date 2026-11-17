@@ -234,20 +234,90 @@ export const getMailById = async (req: Request, res: Response) => {
   }
 };
 
+// export const suratKeluarMonthlyByWeek = async (req: Request, res: Response) => {
+//   try {
+//     const { month, year, plant } = req.query;
+
+//     // default: bulan & tahun sekarang
+//     const now = new Date();
+//     const targetMonth = month
+//       ? parseInt(month as string, 10) - 1
+//       : now.getMonth(); // JS month 0-11
+//     const targetYear = year ? parseInt(year as string, 10) : now.getFullYear();
+
+//     // awal bulan
+//     const startOfMonth = new Date(targetYear, targetMonth, 1, 0, 0, 0, 0);
+//     // akhir bulan
+//     const endOfMonth = new Date(
+//       targetYear,
+//       targetMonth + 1,
+//       0,
+//       23,
+//       59,
+//       59,
+//       999
+//     );
+
+//     // ambil semua surat keluar dalam bulan tsb, filter plant jika ada
+//     const suratKeluar = await prisma.surat_Keluar.findMany({
+//       where: {
+//         createdAt: {
+//           gte: startOfMonth,
+//           lte: endOfMonth,
+//         },
+//         ...(plant ? { plant: plant as Plant } : {}), // filter plant jika ada
+//       },
+//       orderBy: { createdAt: "asc" },
+//     });
+
+//     // hitung jumlah per minggu
+//     const weeklyCounts = [0, 0, 0, 0]; // minggu ke-1 sampai ke-4
+
+//     suratKeluar.forEach((surat) => {
+//       const day = surat.createdAt.getDate();
+//       const weekIndex = Math.floor((day - 1) / 7); // 0-3
+//       if (weekIndex >= 0 && weekIndex < 4) {
+//         weeklyCounts[weekIndex]++;
+//       }
+//     });
+
+//     res.json({
+//       success: true,
+//       data: [
+//         { week: 1, count: weeklyCounts[0] },
+//         { week: 2, count: weeklyCounts[1] },
+//         { week: 3, count: weeklyCounts[2] },
+//         { week: 4, count: weeklyCounts[3] },
+//       ],
+//       meta: {
+//         month: targetMonth + 1,
+//         year: targetYear,
+//         plant: plant || "ALL", // tampilkan ALL kalau tidak ada filter
+//         total: suratKeluar.length,
+//       },
+//     });
+//   } catch (error) {
+//     console.error("Error fetching surat keluar by week:", error);
+//     res
+//       .status(500)
+//       .json({ success: false, error: "Failed to fetch surat keluar by week" });
+//   }
+// };
+
 export const suratKeluarMonthlyByWeek = async (req: Request, res: Response) => {
   try {
     const { month, year, plant } = req.query;
 
-    // default: bulan & tahun sekarang
     const now = new Date();
+
     const targetMonth = month
       ? parseInt(month as string, 10) - 1
-      : now.getMonth(); // JS month 0-11
+      : now.getMonth();
+
     const targetYear = year ? parseInt(year as string, 10) : now.getFullYear();
 
-    // awal bulan
     const startOfMonth = new Date(targetYear, targetMonth, 1, 0, 0, 0, 0);
-    // akhir bulan
+
     const endOfMonth = new Date(
       targetYear,
       targetMonth + 1,
@@ -258,49 +328,60 @@ export const suratKeluarMonthlyByWeek = async (req: Request, res: Response) => {
       999
     );
 
-    // ambil semua surat keluar dalam bulan tsb, filter plant jika ada
-    const suratKeluar = await prisma.surat_Keluar.findMany({
+    const outMails = await prisma.surat_Keluar.findMany({
       where: {
         createdAt: {
           gte: startOfMonth,
           lte: endOfMonth,
         },
-        ...(plant ? { plant: plant as Plant } : {}), // filter plant jika ada
+        ...(plant ? { plant: plant as Plant } : {}),
       },
-      orderBy: { createdAt: "asc" },
     });
 
-    // hitung jumlah per minggu
-    const weeklyCounts = [0, 0, 0, 0]; // minggu ke-1 sampai ke-4
+    const lastDay = new Date(targetYear, targetMonth + 1, 0).getDate();
 
-    suratKeluar.forEach((surat) => {
-      const day = surat.createdAt.getDate();
-      const weekIndex = Math.floor((day - 1) / 7); // 0-3
-      if (weekIndex >= 0 && weekIndex < 4) {
-        weeklyCounts[weekIndex]++;
-      }
-    });
+    const dailyData = [];
+
+    for (let day = 1; day <= lastDay; day++) {
+      const count = outMails.filter((mail) => {
+        const mailDate = mail.createdAt;
+
+        return (
+          mailDate.getDate() === day &&
+          mailDate.getMonth() === targetMonth &&
+          mailDate.getFullYear() === targetYear
+        );
+      }).length;
+
+      const formattedDate = `${targetYear}-${String(targetMonth + 1).padStart(
+        2,
+        "0"
+      )}-${String(day).padStart(2, "0")}`;
+
+      dailyData.push({
+        day,
+        date: formattedDate,
+        count,
+      });
+    }
 
     res.json({
       success: true,
-      data: [
-        { week: 1, count: weeklyCounts[0] },
-        { week: 2, count: weeklyCounts[1] },
-        { week: 3, count: weeklyCounts[2] },
-        { week: 4, count: weeklyCounts[3] },
-      ],
+      data: dailyData,
       meta: {
         month: targetMonth + 1,
         year: targetYear,
-        plant: plant || "ALL", // tampilkan ALL kalau tidak ada filter
-        total: suratKeluar.length,
+        plant: plant || null,
+        totalMails: outMails.length,
       },
     });
   } catch (error) {
-    console.error("Error fetching surat keluar by week:", error);
-    res
-      .status(500)
-      .json({ success: false, error: "Failed to fetch surat keluar by week" });
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch monthly guests",
+    });
   }
 };
 

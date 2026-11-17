@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../prisma";
+import { Plant } from "../types/enums";
 
 export const createAbsensi = async (req: Request, res: Response) => {
   try {
@@ -68,17 +69,17 @@ export const getAllAbsensi = async (req: Request, res: Response) => {
       };
     }
     // filter tanggal
-    if (tanggal) {
-      const startDate = new Date(tanggal as string);
-      const endDate = new Date(tanggal as string);
+    const date = tanggal ? new Date(tanggal as string) : new Date();
+    const startDate = new Date(date);
+    startDate.setHours(0, 0, 0, 0);
 
-      endDate.setHours(23, 59, 59, 999);
+    const endDate = new Date(date);
+    endDate.setHours(23, 59, 59, 999);
 
-      whereClause.createdAt = {
-        gte: startDate,
-        lte: endDate,
-      };
-    }
+    whereClause.createdAt = {
+      gte: startDate,
+      lte: endDate,
+    };
 
     const absensi = await prisma.absensi.findMany({
       include: {
@@ -233,6 +234,7 @@ export const absensiKeluar = async (req: Request, res: Response) => {
       where: { id },
       data: {
         isActive: false,
+        checkOutAt: new Date(),
       },
     });
 
@@ -247,6 +249,87 @@ export const absensiKeluar = async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       message: "Terjadi kesalahan server",
+    });
+  }
+};
+
+export const absensiMonthlyByWeek = async (req: Request, res: Response) => {
+  try {
+    const { month, year, plant } = req.query;
+
+    const now = new Date();
+
+    const targetMonth = month
+      ? parseInt(month as string, 10) - 1
+      : now.getMonth();
+
+    const targetYear = year ? parseInt(year as string, 10) : now.getFullYear();
+
+    const startOfMonth = new Date(targetYear, targetMonth, 1, 0, 0, 0, 0);
+
+    const endOfMonth = new Date(
+      targetYear,
+      targetMonth + 1,
+      0,
+      23,
+      59,
+      59,
+      999
+    );
+
+    const absensis = await prisma.absensi.findMany({
+      where: {
+        createdAt: {
+          gte: startOfMonth,
+          lte: endOfMonth,
+        },
+        ...(plant ? { plant: plant as Plant } : {}),
+      },
+    });
+
+    const lastDay = new Date(targetYear, targetMonth + 1, 0).getDate();
+
+    const dailyData = [];
+
+    for (let day = 1; day <= lastDay; day++) {
+      const count = absensis.filter((employe) => {
+        const absensiDate = employe.createdAt;
+
+        return (
+          absensiDate.getDate() === day &&
+          absensiDate.getMonth() === targetMonth &&
+          absensiDate.getFullYear() === targetYear
+        );
+      }).length;
+
+      const formattedDate = `${targetYear}-${String(targetMonth + 1).padStart(
+        2,
+        "0"
+      )}-${String(day).padStart(2, "0")}`;
+
+      dailyData.push({
+        day,
+        date: formattedDate,
+        count,
+      });
+    }
+
+    res.json({
+      success: true,
+      data: dailyData,
+      meta: {
+        month: targetMonth + 1,
+        year: targetYear,
+        plant: plant || null,
+        totalAbsensi: absensis.length,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch monthly guests",
     });
   }
 };

@@ -166,24 +166,48 @@ export const deleteKaryawan = async (req: Request, res: Response) => {
   try {
     const idParam = req.params.id;
     const id = Array.isArray(idParam) ? idParam[0] : idParam;
+
     if (!id) {
-      return res
-        .status(400)
-        .json({ success: false, error: "ID wajib diberikan" });
+      return res.status(400).json({
+        success: false,
+        error: "ID wajib diberikan",
+      });
     }
 
-    const deleteKaryawan = await prisma.employee.delete({
+    const employee = await prisma.employee.findUnique({
       where: { id },
     });
+
+    if (!employee) {
+      return res.status(404).json({
+        success: false,
+        error: "Data karyawan tidak ditemukan",
+      });
+    }
+
+    await prisma.$transaction([
+      prisma.absensi.deleteMany({
+        where: {
+          employeeId: id,
+        },
+      }),
+      prisma.employee.delete({
+        where: {
+          id,
+        },
+      }),
+    ]);
+
     return res.status(200).json({
       success: true,
-      message: "Data tamu berhasil diupdate!",
+      message: "Data karyawan berhasil dihapus",
     });
   } catch (error) {
-    console.error("Error updating guest items:", error);
+    console.error("Error deleting employee:", error);
+
     return res.status(500).json({
       success: false,
-      error: "Terjadi kesalahan saat mengupdate data tamu!",
+      error: "Terjadi kesalahan saat menghapus data karyawan!",
     });
   }
 };

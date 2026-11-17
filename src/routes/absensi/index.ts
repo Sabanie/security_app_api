@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { verifyAccessToken } from "../../midlleware/verifyToken";
 import {
   createAbsensi,
   getAbsensiById,
@@ -6,14 +7,17 @@ import {
   updateAbsensi,
   deleteAbsensi,
   absensiKeluar,
+  absensiMonthlyByWeek,
 } from "../../controllers/absensi";
 
 const router = Router();
-router.post("/", createAbsensi);
-router.get("/", getAllAbsensi);
-router.get("/:id", getAbsensiById);
-router.patch("/absensi-keluar/:id", absensiKeluar);
-router.put("/:id", updateAbsensi);
-router.delete("/:id", deleteAbsensi);
+router.post("/", verifyAccessToken, createAbsensi);
+router.get("/", verifyAccessToken, getAllAbsensi);
+router.get("/:id", verifyAccessToken, getAbsensiById);
+router.patch("/absensi-keluar/:id", verifyAccessToken, absensiKeluar);
+router.put("/:id", verifyAccessToken, updateAbsensi);
+// 📊 route baru: jumlah guest per minggu dalam bulan
+router.get("/stats/monthly-weeks", verifyAccessToken, absensiMonthlyByWeek);
+router.delete("/:id", verifyAccessToken, deleteAbsensi);
 
 export default router;

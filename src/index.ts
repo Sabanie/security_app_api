@@ -23,7 +23,7 @@ app.use(
   cors({
     credentials: true,
     origin: ["http://localhost:5173", "https://security-app-roan.vercel.app"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   })
 );
 app.use(cookieParser());

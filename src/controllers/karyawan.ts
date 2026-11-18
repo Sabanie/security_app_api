@@ -54,8 +54,8 @@ export const createKaryawan = async (req: Request, res: Response) => {
 // ambil data seluruh karyawan
 export const getAllKaryawan = async (req: Request, res: Response) => {
   try {
-    const { plant, search = "", page = "1", limit = "15" } = req.query;
-    const currentPage = parseInt(page as string, 10);
+    const { plant, search = "", cursor, limit = "15" } = req.query;
+
     const perPage = parseInt(limit as string, 10);
     const whereClause: any = {
       OR: [
@@ -92,19 +92,31 @@ export const getAllKaryawan = async (req: Request, res: Response) => {
 
     const karyawan = await prisma.employee.findMany({
       where: whereClause,
-      skip: (currentPage - 1) * perPage,
-      take: perPage,
+      take: perPage + 1,
+      ...(cursor
+        ? {
+            cursor: {
+              id: String(cursor),
+            },
+            skip: 1,
+          }
+        : {}),
+      orderBy: {
+        nama: "asc",
+      },
     });
+    let nextCursor = null;
 
-    const total = await prisma.employee.count({ where: whereClause });
+    if (karyawan.length > perPage) {
+      const nextItem = karyawan.pop();
+      nextCursor = nextItem?.id;
+    }
+
     res.json({
       success: true,
       data: karyawan,
-      meta: {
-        total,
-        page: currentPage,
-        limit: perPage,
-      },
+      nextCursor,
+      hasMore: !!nextCursor,
     });
   } catch (error) {
     console.error("error fetching Karyawan:", error);

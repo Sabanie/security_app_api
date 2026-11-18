@@ -12,6 +12,12 @@ export const createAbsensi = async (req: Request, res: Response) => {
         id: employeeId,
       },
     });
+    const activeAbsensi = await prisma.absensi.findFirst({
+      where: {
+        employeeId,
+        isActive: true,
+      },
+    });
 
     if (!employee) {
       return res.status(404).json({
@@ -19,7 +25,12 @@ export const createAbsensi = async (req: Request, res: Response) => {
         error: "Karyawan tidak ditemukan",
       });
     }
-
+    if (activeAbsensi) {
+      return res.status(400).json({
+        success: false,
+        error: "Karyawan belum pulang",
+      });
+    }
     const absensi = await prisma.absensi.create({
       data: {
         nopol,
@@ -47,19 +58,13 @@ export const createAbsensi = async (req: Request, res: Response) => {
 
 export const getAllAbsensi = async (req: Request, res: Response) => {
   try {
-    const { plant, search = "", page = "1", limit = "7", tanggal } = req.query;
+    const { plant, search = "", cursor, limit = "15", tanggal } = req.query;
 
-    const currentPage = parseInt(page as string, 10);
     const perPage = parseInt(limit as string, 10);
 
     const whereClause: any = {};
 
-    // filter berdasarkan plant jika ada
-    if (plant) {
-      whereClause.plant = plant;
-    }
-
-    // Search nama karyawan
+    // Search employee name
     if (search) {
       whereClause.employee = {
         name: {
@@ -68,43 +73,72 @@ export const getAllAbsensi = async (req: Request, res: Response) => {
         },
       };
     }
-    // filter tanggal
-    const date = tanggal ? new Date(tanggal as string) : new Date();
-    const startDate = new Date(date);
-    startDate.setHours(0, 0, 0, 0);
 
-    const endDate = new Date(date);
-    endDate.setHours(23, 59, 59, 999);
+    // Filter plant
+    if (plant) {
+      whereClause.plant = plant;
+    }
 
-    whereClause.createdAt = {
-      gte: startDate,
-      lte: endDate,
-    };
+    // Filter tanggal
+    if (tanggal) {
+      const date = new Date(tanggal as string);
+
+      if (isNaN(date.getTime())) {
+        return res.status(400).json({
+          success: false,
+          message: "Format tanggal tidak valid",
+        });
+      }
+
+      const startDate = new Date(date);
+      startDate.setHours(0, 0, 0, 0);
+
+      const endDate = new Date(date);
+      endDate.setHours(23, 59, 59, 999);
+
+      whereClause.createdAt = {
+        gte: startDate,
+        lte: endDate,
+      };
+    }
 
     const absensi = await prisma.absensi.findMany({
+      where: whereClause,
       include: {
         employee: true,
       },
-      where: whereClause,
-      skip: (currentPage - 1) * perPage,
-      take: perPage,
-      orderBy: { createdAt: "desc" },
+      take: perPage + 1,
+      ...(cursor && {
+        cursor: {
+          id: String(cursor),
+        },
+        skip: 1,
+      }),
+      orderBy: {
+        createdAt: "asc",
+      },
     });
 
-    const total = await prisma.absensi.count({ where: whereClause });
+    let nextCursor = null;
 
-    res.json({
+    if (absensi.length > perPage) {
+      const nextItem = absensi.pop();
+      nextCursor = nextItem?.id;
+    }
+
+    return res.json({
       success: true,
       data: absensi,
-      meta: {
-        total,
-        page: currentPage,
-        limit: perPage,
-      },
+      nextCursor,
+      hasMore: !!nextCursor,
     });
   } catch (error) {
     console.error("Error fetching Absensi:", error);
-    res.status(500).json({ success: false, error: "Failed to fetch Absensi" });
+
+    return res.status(500).json({
+      success: false,
+      error: "Failed to fetch Absensi",
+    });
   }
 };
 

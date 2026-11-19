@@ -63,11 +63,12 @@ export const getAllAbsensi = async (req: Request, res: Response) => {
     const perPage = parseInt(limit as string, 10);
 
     const whereClause: any = {};
+    console.log(search);
 
     // Search employee name
     if (search) {
       whereClause.employee = {
-        name: {
+        nama: {
           contains: search as string,
           mode: "insensitive",
         },
@@ -96,7 +97,20 @@ export const getAllAbsensi = async (req: Request, res: Response) => {
       const endDate = new Date(date);
       endDate.setHours(23, 59, 59, 999);
 
-      whereClause.createdAt = {
+      whereClause.checkInAt = {
+        gte: startDate,
+        lte: endDate,
+      };
+    } else {
+      const today = new Date();
+
+      const startDate = new Date(today);
+      startDate.setHours(0, 0, 0, 0);
+
+      const endDate = new Date(today);
+      endDate.setHours(23, 59, 59, 999);
+
+      whereClause.checkInAt = {
         gte: startDate,
         lte: endDate,
       };
@@ -115,7 +129,7 @@ export const getAllAbsensi = async (req: Request, res: Response) => {
         skip: 1,
       }),
       orderBy: {
-        createdAt: "asc",
+        checkInAt: "asc",
       },
     });
 

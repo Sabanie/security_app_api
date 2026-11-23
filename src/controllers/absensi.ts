@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../prisma";
 import { Plant } from "../types/enums";
+import PDFDocument from "pdfkit";
 
 export const createAbsensi = async (req: Request, res: Response) => {
   try {
@@ -378,6 +379,233 @@ export const absensiMonthlyByWeek = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       error: "Failed to fetch monthly guests",
+    });
+  }
+};
+
+export const exportPDF = async (req: Request, res: Response) => {
+  const { plant, search = "", tanggal } = req.query;
+  const [year, month, day] = (tanggal as string).split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+  const whereClause: any = {};
+
+  // search nama
+  if (search) {
+    whereClause.employee = {
+      nama: {
+        contains: search as string,
+        mode: "insensitive",
+      },
+    };
+  }
+
+  // filter plant
+  if (plant) {
+    whereClause.employee = {
+      ...whereClause.employee,
+      plant: plant as string,
+    };
+  }
+
+  // filter tanggal
+  if (tanggal) {
+    const date = new Date(tanggal as string);
+
+    const startDate = new Date(date);
+    startDate.setHours(0, 0, 0, 0);
+
+    const endDate = new Date(date);
+    endDate.setHours(23, 59, 59, 999);
+
+    whereClause.checkInAt = {
+      gte: startDate,
+      lte: endDate,
+    };
+  }
+
+  try {
+    const data = await prisma.absensi.findMany({
+      where: whereClause,
+      include: {
+        employee: true,
+      },
+      orderBy: {
+        checkInAt: "asc",
+      },
+    });
+
+    if (!data.length) {
+      return res.status(404).json({
+        success: false,
+        error: "Data absensi tidak ditemukan",
+      });
+    }
+
+    const firstDate = data[0].checkInAt;
+    const lastDate = data[data.length - 1].checkInAt;
+
+    const periodeAwal = new Date(firstDate).toLocaleDateString("id-ID");
+
+    const periodeAkhir = new Date(lastDate).toLocaleDateString("id-ID");
+
+    const formatFileDate = (date: Date) => {
+      const d = String(date.getDate()).padStart(2, "0");
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const y = date.getFullYear();
+
+      return `${d}-${m}-${y}`;
+    };
+
+    const fileName = `laporan-absensi-${formatFileDate(
+      firstDate
+    )}_sd_${formatFileDate(lastDate)}.pdf`;
+
+    const doc = new PDFDocument({
+      size: "A4",
+      margin: 40,
+    });
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+
+    doc.pipe(res);
+    // Judul
+    doc.fontSize(18).font("Helvetica-Bold").text("LAPORAN ABSENSI KARYAWAN", {
+      align: "center",
+    });
+
+    doc.moveDown();
+
+    doc
+      .fontSize(10)
+      .font("Helvetica")
+      .text(`Tanggal cetak : ${new Date().toLocaleDateString("id-ID")}`);
+    doc.moveDown();
+
+    doc
+      .fontSize(10)
+      .fillColor("black")
+      .text(`Periode: ${periodeAwal} s/d ${periodeAkhir}`);
+
+    doc.moveDown();
+
+    // Ukuran kolom
+    const startX = 40;
+    let startY = doc.y;
+
+    const colNo = 40;
+    const colNama = 100;
+    const colKendaraan = 100;
+    const colNopol = 80;
+    const colCheckIn = 80;
+    const colCheckOut = 80;
+
+    // Header
+    const drawTableHeader = (y: number) => {
+      doc.rect(startX, y, 480, 25).fill("#2563eb");
+
+      doc.fillColor("white").font("Helvetica-Bold").fontSize(9);
+
+      doc.text("No", startX + 10, y + 7);
+      doc.text("Nama", startX + colNo + 10, y + 7);
+      doc.text("Kendaraan", startX + colNo + colNama + 10, y + 7);
+      doc.text("NoPol", startX + colNo + colNama + colKendaraan + 10, y + 7);
+      doc.text(
+        "Jam Masuk",
+        startX + colNo + colNama + colKendaraan + colNopol + 10,
+        y + 7
+      );
+      doc.text(
+        "Jam Keluar",
+        startX + colNo + colNama + colKendaraan + colNopol + colCheckIn + 10,
+        y + 7
+      );
+    };
+    drawTableHeader(startY);
+    startY += 25;
+    // DATA
+    data.forEach((item, index) => {
+      if (startY > 730) {
+        doc.addPage();
+        startY = 50;
+        drawTableHeader(startY);
+        startY += 25;
+      }
+
+      const bgColor = index % 2 === 0 ? "#f8fafc" : "#ffffff";
+
+      doc.rect(startX, startY, 480, 25).fill(bgColor);
+
+      doc.strokeColor("#d1d5db").rect(startX, startY, 480, 25).stroke();
+
+      doc.fillColor("black");
+      doc.font("Helvetica").fontSize(8);
+
+      // No
+      doc.text(String(index + 1), startX + 10, startY + 7);
+
+      // Nama
+      doc.text(item.employee?.nama || "-", startX + colNo + 10, startY + 7, {
+        width: colNama - 15,
+      });
+
+      // Kendaraan
+      doc.text(
+        item.kendaraan || "-",
+        startX + colNo + colNama + 10,
+        startY + 7,
+        {
+          width: colKendaraan - 15,
+        }
+      );
+
+      // Nopol
+      doc.text(
+        item.nopol || "-",
+        startX + colNo + colNama + colKendaraan + 10,
+        startY + 7,
+        {
+          width: colNopol - 15,
+        }
+      );
+
+      // Jam Masuk
+      doc.text(
+        item.checkInAt
+          ? new Date(item.checkInAt).toLocaleTimeString("id-ID")
+          : "-",
+        startX + colNo + colNama + colKendaraan + colNopol + 10,
+        startY + 7
+      );
+
+      // Jam Keluar
+      doc.text(
+        item.checkOutAt
+          ? new Date(item.checkOutAt).toLocaleTimeString("id-ID")
+          : "-",
+        startX + colNo + colNama + colKendaraan + colNopol + colCheckIn + 10,
+        startY + 7
+      );
+      startY += 25; // WAJIB
+    });
+
+    // FOOTER (DI LUAR FOREACH)
+    doc.y = startY + 20;
+
+    doc
+      .font("Helvetica-Bold")
+      .fontSize(10)
+      .fillColor("black")
+      .text(`Total Data : ${data.length}`, {
+        align: "left",
+      });
+
+    doc.end();
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Gagal Export PDF",
     });
   }
 };
